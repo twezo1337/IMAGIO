@@ -1,0 +1,190 @@
+﻿
+
+/*AUTH MODAL WINDOW*/
+
+
+.modalAuthBackground {
+    display: none;
+    background: rgba(0, 0, 0, 0.3);
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    position: fixed;
+    top: 0;
+    left: 0;
+    /* указываем z-индекс для корректного наслаивания */
+    z-index: 1;
+}
+
+.modalAuthActive {
+    width: 596px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
+    margin-bottom: 150px;
+    padding-top: 32px;
+    padding-left: 98px;
+    padding-right: 98px;
+    padding-bottom: 32px;
+    background-color: rgb(255, 255, 255);
+    cursor: default;
+    border: 1px solid #DC6A00;
+    box-shadow: 0px 0px 20px 2px rgba(220, 106, 0, 0.25);
+    border-radius: 25px;
+}
+
+.modalAuthClose {
+    font-family: var(--font-regular);
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    width: 45px;
+    height: 45px;
+    cursor: pointer;
+}
+
+    /* сама картинка кнопочки закрытия */
+    .modalAuthClose img {
+        margin: 3px;
+        width: 40px;
+        height: 40px;
+    }
+
+.modalAuthWindow {
+    position: relative;
+}
+    .modalAuthWindow h2 {
+        text-align: center;
+        font-weight: 500;
+        font-size: 32px;
+        line-height: 46px;
+        letter-spacing: 0.09em;
+        color: #DC6A00;
+    }
+
+
+/*REGISTRATION MODAL WINDOW*/
+
+
+.modalRegBackground {
+    display: none;
+    background: rgba(0, 0, 0, 0.3);
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    position: fixed;
+    top: 0;
+    left: 0;
+    /* указываем z-индекс для корректного наслаивания */
+    z-index: 1;
+}
+
+.modalRegActive {
+    width: 596px;
+    margin-top: 50px;
+    margin-bottom: 150px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: rgb(255, 255, 255);
+    cursor: default;
+    padding-top: 32px;
+    padding-left: 98px;
+    padding-right: 98px;
+    padding-bottom: 32px;
+    border: 1px solid #DC6A00;
+    box-shadow: 0px 0px 20px 2px rgba(220, 106, 0, 0.25);
+    border-radius: 25px;
+}
+
+.modalRegClose {
+    font-family: var(--font-regular);
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    width: 45px;
+    height: 45px;
+    cursor: pointer;
+}
+    .modalRegClose img {
+        margin: 3px;
+        width: 40px;
+        height: 40px;
+    }
+
+.modalRegWindow {
+    position: relative;
+}
+.modalRegWindow h2 {
+    text-align: center;
+    font-weight: 500;
+    font-size: 32px;
+    line-height: 46px;
+    letter-spacing: 0.09em;
+    color: #DC6A00;
+}
+
+
+/*FORMS STYLE*/
+
+
+.form_group {
+    margin-top: 39px;
+}
+
+.form_input_name {
+    display: block;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 26px;
+    letter-spacing: 0.09em;
+    color: #DC6A00;
+}
+
+.form_input {
+    margin-top: 5px;
+    width: 100%;
+    background: #FFFFFF;
+    border-bottom: 1px solid #DC6A00;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    padding-left: 22px;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: 0.02em;
+    color: #6C6C6C;
+}
+
+    .form_input:focus {
+        box-shadow: 0px 15px 25px 3px rgba(220, 106, 0, 0.22);
+    }
+
+.form_group_button {
+    margin-top: 40px;
+    text-align: center;
+}
+
+.form_button {
+    width: 200px;
+    height: 46px;
+    background: #DC6A00;
+    border: 1px solid #DC6A00;
+    border-radius: 15px;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 26px;
+    letter-spacing: 0.095em;
+    color: #FFFFFF;
+    margin: 0 auto;
+}
+
+.error_form_send {
+    background: #FFFFFF;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 28px;
+    letter-spacing: 0.02em;
+    color: #BF0000;
+    text-align: center;
+    margin-top: 10px;
+}

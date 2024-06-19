@@ -1,0 +1,537 @@
+﻿@using IMAGIO.ViewModels
+@using IPlugin
+@model IMAGIO.ViewModels.ImageViewModel
+@{
+    ViewData["Title"] = "Photo Editor";
+
+    List<string> Photos = new List<string>();
+    if (@ViewBag.PhotoId != 999)
+    {
+        foreach (string src in @ViewBag.PhotoSrc)
+        {
+            Photos.Add(src);  
+        }
+    }
+}
+
+<section class="photo_editor_frame">
+    <div class="photos">
+        <div class="photo_list">
+            @{
+                if (@ViewBag.PhotoId != 999)
+                {
+                    for (int i = 0; i < Photos.Count; i++)
+                    {
+                        <form class="list_photo_click_form" method="post" action="PhotoEditor/SelectedPhoto">
+                            <input class="list_photo_input" type="number" value="@i" name="idImg" />
+                            @if (i != @ViewBag.PhotoId)
+                            {
+                                <button class="list_photo_btn" type="submit"><img src="@Url.Content(Photos[i])" class="photo_list_pic" /></button>
+                            }
+                            else
+                            {
+                                <button class="list_photo_btn" type="submit"><img src="@Url.Content(Photos[i])" class="photo_list_pic list_pic_active" /></button>
+                            }
+                        </form>
+                    }
+                }
+                else
+                {
+                    <h3 class="photo_list_error">Фото не выбрано</h3>
+                }
+            }
+        </div>
+        @{
+            if (@ViewBag.PhotoId != 999)
+            {
+                <form style="height: 61px; width:105px; padding-bottom: 10px;" method="post" action="PhotoEditor/DeletePhotos">
+                    <input style="visibility:hidden; height: 0px; width: 0px;" type="text" value="@Photos.Count" name="count" />
+                    <button type="submit" class="delete_photos">Очистить все <img src="~/img/delete_photos.svg" /></button>
+                </form>
+            }
+            else
+            {
+                <button class="delete_photos">Очистить все <img src="~/img/delete_photos.svg" /></button>
+            }
+        }
+    </div>
+    <div class="edit_photo">
+        <div class="edit_photo_btns">
+            @{
+                if (@ViewBag.PhotoId != 999)
+                {
+                    <form style="height: 61px; width:105px; padding-bottom: 10px;" method="post" action="PhotoEditor/DeletePhoto">
+                        <button type="submit" class="back_photo"><img src="~/img/delete_photo.svg" /></button>
+                        <input style="visibility:hidden; height: 0px; width: 0px;" type="text" value="@Photos[@ViewBag.PhotoId]" name="imgSrc" />
+                        <input style="visibility:hidden; height: 0px; width: 0px;" type="number" value="@ViewBag.PhotoId" name="id" />  
+                    </form>
+                }
+                else
+                {
+                    <button class="back_photo"><img src="~/img/delete_photo.svg" /></button>
+                }
+            }
+            <div class="zoom_btns">
+                <button id="minus"><img src="~/img/zoom_out.svg" /></button>
+                <button id="plus"><img src="~/img/zoom_in.svg" /></button>
+            </div>
+        </div>
+        <div class="edit_frame">
+            @{
+                if (@ViewBag.PhotoId != 999)
+                {
+                    <img id="frameImage" src="@Url.Content(Photos[@ViewBag.PhotoId])" />
+                }
+                else
+                {
+                    <img id="frameImage" src="@Url.Content(@ViewBag.DownloadSrc1)" />
+                }
+                <canvas id="canvas"></canvas>
+            }
+        </div>
+    </div>
+    <div class="edit_tools">
+        <div class="edit_tools_frame one">
+            <div class="edit_tool ">
+                <div class="edit_tool_title">
+                    <div class="edit_tool_name">
+                        <img src="~/img/rotate.svg" />
+                        <span>Повернуть</span>
+                    </div>
+                    <img class="tool_closed_icon" src="~/img/tool_closed.svg" />
+                </div>
+
+                <div class="edit_tool_content">
+                    <div class="edit_tool_content_cards">
+                        @{
+                            if (@ViewBag.PhotoId != 999)
+                            {
+                                for (int i = 0; i < @ViewBag.Plugins.Count; i++)
+                                {
+                                    if (@ViewBag.Plugins[i].name == "Отразить по вертикали" || @ViewBag.Plugins[i].name == "Отразить по горизонтали" ||
+                                    @ViewBag.Plugins[i].name == "Поворот влево" || @ViewBag.Plugins[i].name == "Поворот вправо")
+                                    {
+                                       <form method="post" action="PhotoEditor/EditPhoto">
+                                        <input style="visibility:hidden; height: 0px; width: 0px;" type="text" value="@Photos[@ViewBag.PhotoId]" name="src" />
+                                        <input style="visibility:hidden; height: 0px; width: 0px;" type="number" value="@Photos.Count" name="id" />
+                                        <input style="visibility:hidden; height: 0px; width: 0px;" type="text" value="@ViewBag.Plugins[i].name" name="plugName" />
+                                        <button style="background: transparent;" type="submit">
+                                            <div class="edit_tool_card">
+                                                <img src="@Url.Content(@ViewBag.Plugins[i].iconSrc)" />
+                                                <span>@ViewBag.Plugins[i].name</span>
+                                            </div>
+                                        </button>
+                                    </form> 
+                                    }
+                                }
+                            }
+                        }   
+                    </div> 
+                </div>
+            </div>
+            <div class="edit_tool ">
+                <div class="edit_tool_title">
+                    <div class="edit_tool_name">
+                        <img src="~/img/resize.svg" />
+                        <span>Изменение размера</span>
+                    </div>
+                    <img class="tool_closed_icon" src="~/img/tool_closed.svg" />
+                </div>
+
+                <div class="edit_tool_content">
+                    <div class="edit_tool_content_cards">
+                        @{
+                            if (@ViewBag.PhotoId != 999)
+                            {
+                                for (int i = 0; i < @ViewBag.Plugins.Count; i++)
+                                {
+                                    if (@ViewBag.Plugins[i].name == "Изменить размер")
+                                    {
+                                        <form method="post" action="PhotoEditor/EditPhoto">
+                                            <input style="visibility:hidden; height: 0px; width: 0px;" type="text" value="@Photos[@ViewBag.PhotoId]" name="src" />
+                                            <input style="visibility:hidden; height: 0px; width: 0px;" type="number" value="@Photos.Count" name="id" />
+                                            <input style="visibility:hidden; height: 0px; width: 0px;" type="text" value="@ViewBag.Plugins[i].name" name="plugName" />
+                                            <button style="background: transparent;" type="submit">
+                                                <div class="edit_tool_card">
+                                                    <img src="@Url.Content(@ViewBag.Plugins[i].iconSrc)" />
+                                                    <span>@ViewBag.Plugins[i].name</span>
+                                                </div>
+                                            </button>
+                                            <input placeholder="Ширина" class="input_tool" type="number" name="width" />
+                                            <input placeholder="Высота" class="input_tool" type="number" name="height" />
+                                        </form>
+                                    }
+                                }
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="edit_tool ">
+                <div class="edit_tool_title">
+                    <div class="edit_tool_name">
+                        <img src="~/img/color_param.svg" />
+                        <span>Цветовые параметры</span>
+                    </div>
+                    <img class="tool_closed_icon" src="~/img/tool_closed.svg" />
+                </div>
+
+                <div class="edit_tool_content">
+                    <div class="edit_tool_content_cards">
+                        @{
+                            if (@ViewBag.PhotoId != 999)
+                            {
+                                for (int i = 0; i < @ViewBag.Plugins.Count; i++)
+                                {
+                                    if (@ViewBag.Plugins[i].name == "Контраст" || @ViewBag.Plugins[i].name == "Яркость" || @ViewBag.Plugins[i].name == "Насыщенность")
+                                    {
+                                        <form method="post" action="PhotoEditor/EditPhoto">
+                                            <input style="visibility:hidden; height: 0px; width: 0px;" type="text" value="@Photos[@ViewBag.PhotoId]" name="src" />
+                                            <input style="visibility:hidden; height: 0px; width: 0px;" type="number" value="@Photos.Count" name="id" />
+                                            <input style="visibility:hidden; height: 0px; width: 0px;" type="text" value="@ViewBag.Plugins[i].name" name="plugName" />
+                                            <button style="background: transparent;" type="submit">
+                                                <div class="edit_tool_card">
+                                                    <img src="@Url.Content(@ViewBag.Plugins[i].iconSrc)" />
+                                                    <span>@ViewBag.Plugins[i].name</span>
+                                                </div>
+                                                <input type="range" min="0" max="200" value="100" class="slider" name="valueRange" />
+                                            </button>
+                                        </form>
+                                    }
+                                    else if (@ViewBag.Plugins[i].name == "Оттенок")
+                                    {
+                                        <form method="post" action="PhotoEditor/EditPhoto">
+                                            <input style="visibility:hidden; height: 0px; width: 0px;" type="text" value="@Photos[@ViewBag.PhotoId]" name="src" />
+                                            <input style="visibility:hidden; height: 0px; width: 0px;" type="number" value="@Photos.Count" name="id" />
+                                            <input style="visibility:hidden; height: 0px; width: 0px;" type="text" value="@ViewBag.Plugins[i].name" name="plugName" />
+                                            <button style="background: transparent;" type="submit">
+                                                <div class="edit_tool_card">
+                                                    <img src="@Url.Content(@ViewBag.Plugins[i].iconSrc)" />
+                                                    <span>@ViewBag.Plugins[i].name</span>
+                                                </div>
+                                                <input type="range" min="-360" max="360" value="0" class="slider" name="width" />
+                                            </button>
+                                        </form>
+                                    }
+                                    else if (@ViewBag.Plugins[i].name == "Инвертировать цвета")
+                                    {
+                                        if (@ViewBag.Plugins[i].isPro && User.IsInRole("UserPRO"))
+                                        {
+                                            <form method="post" action="PhotoEditor/EditPhoto">
+                                                <input style="visibility:hidden; height: 0px; width: 0px;" type="text" value="@Photos[@ViewBag.PhotoId]" name="src" />
+                                                <input style="visibility:hidden; height: 0px; width: 0px;" type="number" value="@Photos.Count" name="id" />
+                                                <input style="visibility:hidden; height: 0px; width: 0px;" type="text" value="@ViewBag.Plugins[i].name" name="plugName" />
+                                                <button style="background: transparent;" type="submit">
+                                                    <div class="edit_tool_card">
+                                                        <img src="@Url.Content(@ViewBag.Plugins[i].iconSrc)" />
+                                                        <span>@ViewBag.Plugins[i].name</span>
+                                                    </div>
+                                                </button>
+                                            </form>
+                                        }
+                                        else
+                                        {
+                                            <div>
+                                                <input style="visibility:hidden; height: 0px; width: 0px;" type="text" value="@Photos[@ViewBag.PhotoId]" name="src" />
+                                                <input style="visibility:hidden; height: 0px; width: 0px;" type="number" value="@Photos.Count" name="id" />
+                                                <input style="visibility:hidden; height: 0px; width: 0px;" type="text" value="@ViewBag.Plugins[i].name" name="plugName" />
+                                                <button style="background: transparent;">
+                                                    <div class="edit_tool_card" style="background: #B75800;">
+                                                        <p class="PRO_tool">PRO</p>
+                                                        <img src="@Url.Content(@ViewBag.Plugins[i].iconSrc)" />
+                                                        <span>@ViewBag.Plugins[i].name</span>
+                                                    </div>
+                                                </button>
+                                            </div>
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="edit_tool ">
+                <div class="edit_tool_title">
+                    <div class="edit_tool_name">
+                        <img src="~/img/gaussians.svg" />
+                        <span>Фильтры улучшения</span>
+                    </div>
+                    <img class="tool_closed_icon" src="~/img/tool_closed.svg" />
+                </div>
+
+                <div class="edit_tool_content">
+                    <div class="edit_tool_content_cards">
+                        @{
+                            if (@ViewBag.PhotoId != 999)
+                            {
+                                for (int i = 0; i < @ViewBag.Plugins.Count; i++)
+                                {
+                                    if (@ViewBag.Plugins[i].name == "Размытие Гаусса" || @ViewBag.Plugins[i].name == "Резкость Гаусса" || @ViewBag.Plugins[i].name == "Медианный фильтр")
+                                    {
+                                        if (@ViewBag.Plugins[i].isPro && User.IsInRole("UserPRO"))
+                                        { 
+                                            <form method="post" action="PhotoEditor/EditPhoto">
+                                                <input style="visibility:hidden; height: 0px; width: 0px;" type="text" value="@Photos[@ViewBag.PhotoId]" name="src" />
+                                                <input style="visibility:hidden; height: 0px; width: 0px;" type="number" value="@Photos.Count" name="id" />
+                                                <input style="visibility:hidden; height: 0px; width: 0px;" type="text" value="@ViewBag.Plugins[i].name" name="plugName" />
+                                                <button style="background: transparent;" type="submit">
+                                                    <div class="edit_tool_card">
+                                                        <img src="@Url.Content(@ViewBag.Plugins[i].iconSrc)" />
+                                                        <span>@ViewBag.Plugins[i].name</span>
+                                                    </div>
+                                                </button>
+                                                <input class="input_tool" type="number" min="1" max="15" value="" placeholder="Размер матрицы" name="filterValue" />
+                                            </form>
+                                        }
+                                        else
+                                        {
+                                            <div>
+                                                <input style="visibility:hidden; height: 0px; width: 0px;" type="text" value="@Photos[@ViewBag.PhotoId]" name="src" />
+                                                <input style="visibility:hidden; height: 0px; width: 0px;" type="number" value="@Photos.Count" name="id" />
+                                                <input style="visibility:hidden; height: 0px; width: 0px;" type="text" value="@ViewBag.Plugins[i].name" name="plugName" />
+                                                <button style="background: transparent;">
+                                                    <div class="edit_tool_card" style="background: #B75800;">
+                                                        <p class="PRO_tool">PRO</p>
+                                                        <img src="@Url.Content(@ViewBag.Plugins[i].iconSrc)" />
+                                                        <span>@ViewBag.Plugins[i].name</span>
+                                                    </div>
+                                                </button>
+                                            </div>
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="edit_tool ">
+                <div class="edit_tool_title">
+                    <div class="edit_tool_name">
+                        <img src="~/img/filters.svg" />
+                        <span>Фото эффекты</span>
+                    </div>
+                    <img class="tool_closed_icon" src="~/img/tool_closed.svg" />
+                </div>
+
+                <div class="edit_tool_content">
+                    <div class="edit_tool_content_cards">
+                        @{
+                            if (@ViewBag.PhotoId != 999)
+                            {
+                                for (int i = 0; i < @ViewBag.Plugins.Count; i++)
+                                {
+                                    if (@ViewBag.Plugins[i].name == "Черно белое" || @ViewBag.Plugins[i].name == "Полароид" || @ViewBag.Plugins[i].name == "Сепия" || @ViewBag.Plugins[i].name == "Виньетка")
+                                    {
+                                        <form method="post" action="PhotoEditor/EditPhoto">
+                                            <input style="visibility:hidden; height: 0px; width: 0px;" type="text" value="@Photos[@ViewBag.PhotoId]" name="src" />
+                                            <input style="visibility:hidden; height: 0px; width: 0px;" type="number" value="@Photos.Count" name="id" />
+                                            <input style="visibility:hidden; height: 0px; width: 0px;" type="text" value="@ViewBag.Plugins[i].name" name="plugName" />
+                                            <button style="background: transparent;" type="submit">
+                                                <div class="edit_tool_card">
+                                                    <img src="@Url.Content(@ViewBag.Plugins[i].iconSrc)" />
+                                                    <span>@ViewBag.Plugins[i].name</span>
+                                                </div>
+                                            </button>
+                                        </form>
+                                    }
+                                    else if (@ViewBag.Plugins[i].name == "Ламография" || @ViewBag.Plugins[i].name == "Краски" || @ViewBag.Plugins[i].name == "Кодахром")
+                                    {
+                                        if (@ViewBag.Plugins[i].isPro && User.IsInRole("UserPRO"))
+                                        {
+                                            <form method="post" action="PhotoEditor/EditPhoto">
+                                                <input style="visibility:hidden; height: 0px; width: 0px;" type="text" value="@Photos[@ViewBag.PhotoId]" name="src" />
+                                                <input style="visibility:hidden; height: 0px; width: 0px;" type="number" value="@Photos.Count" name="id" />
+                                                <input style="visibility:hidden; height: 0px; width: 0px;" type="text" value="@ViewBag.Plugins[i].name" name="plugName" />
+                                                <button style="background: transparent;" type="submit">
+                                                    <div class="edit_tool_card">
+                                                        <img src="@Url.Content(@ViewBag.Plugins[i].iconSrc)" />
+                                                        <span>@ViewBag.Plugins[i].name</span>
+                                                    </div>
+                                                </button>
+                                            </form>
+                                        }
+                                        else
+                                        {
+                                            <div>
+                                                <input style="visibility:hidden; height: 0px; width: 0px;" type="text" value="@Photos[@ViewBag.PhotoId]" name="src" />
+                                                <input style="visibility:hidden; height: 0px; width: 0px;" type="number" value="@Photos.Count" name="id" />
+                                                <input style="visibility:hidden; height: 0px; width: 0px;" type="text" value="@ViewBag.Plugins[i].name" name="plugName" />
+                                                <button style="background: transparent;">
+                                                    <div class="edit_tool_card" style="background: #B75800;">
+                                                        <p class="PRO_tool">PRO</p>
+                                                        <img src="@Url.Content(@ViewBag.Plugins[i].iconSrc)" />
+                                                        <span>@ViewBag.Plugins[i].name</span>
+                                                    </div>
+                                                </button>
+                                            </div>
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="edit_tool ">
+                <div class="edit_tool_title">
+                    <div class="edit_tool_name">
+                        <img src="~/img/orient.svg" />
+                        <span>Положение</span>
+                    </div>
+                    <img class="tool_closed_icon" src="~/img/tool_closed.svg" />
+                </div>
+
+                <div class="edit_tool_content">
+                    <div class="edit_tool_content_cards">
+                        @{
+                            if (@ViewBag.PhotoId != 999)
+                            {
+                                for (int i = 0; i < @ViewBag.Plugins.Count; i++)
+                                {
+                                    if (@ViewBag.Plugins[i].name == "Перекос")
+                                    {
+                                        <form method="post" action="PhotoEditor/EditPhoto">
+                                            <input style="visibility:hidden; height: 0px; width: 0px;" type="text" value="@Photos[@ViewBag.PhotoId]" name="src" />
+                                            <input style="visibility:hidden; height: 0px; width: 0px;" type="number" value="@Photos.Count" name="id" />
+                                            <input style="visibility:hidden; height: 0px; width: 0px;" type="text" value="@ViewBag.Plugins[i].name" name="plugName" />
+                                            <button style="background: transparent;" type="submit">
+                                                <div class="edit_tool_card">
+                                                    <img src="@Url.Content(@ViewBag.Plugins[i].iconSrc)" />
+                                                    <span>@ViewBag.Plugins[i].name</span>
+                                                </div>
+                                            </button>
+                                            <input placeholder="X" class="input_tool" type="number" name="width" />
+                                            <input placeholder="Y" class="input_tool" type="number" name="height" />
+                                        </form>
+                                    }
+                                }
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="edit_tool ">
+                <div class="edit_tool_title">
+                    <div class="edit_tool_name">
+                        <img src="~/img/addition.svg" />
+                        <span>Дополнительно</span>
+                    </div>
+                    <img class="tool_closed_icon" src="~/img/tool_closed.svg" />
+                </div>
+
+                <div class="edit_tool_content">
+                    <div class="edit_tool_content_cards">
+                        @{
+                            if (@ViewBag.PhotoId != 999)
+                            {
+                                for (int i = 0; i < @ViewBag.Plugins.Count; i++)
+                                {
+                                    if (@ViewBag.Plugins[i].name == "Обнаружение краев" || @ViewBag.Plugins[i].name == "Дизеринг"
+                                    || @ViewBag.Plugins[i].name == "Гистограмма выравнивания" || @ViewBag.Plugins[i].name == "Пикселизация")
+                                    {
+                                        if (@ViewBag.Plugins[i].isPro && User.IsInRole("UserPRO"))
+                                        {
+                                            <form method="post" action="PhotoEditor/EditPhoto">
+                                                <input style="visibility:hidden; height: 0px; width: 0px;" type="text" value="@Photos[@ViewBag.PhotoId]" name="src" />
+                                                <input style="visibility:hidden; height: 0px; width: 0px;" type="number" value="@Photos.Count" name="id" />
+                                                <input style="visibility:hidden; height: 0px; width: 0px;" type="text" value="@ViewBag.Plugins[i].name" name="plugName" />
+                                                <button style="background: transparent;" type="submit">
+                                                    <div class="edit_tool_card">
+                                                        <img src="@Url.Content(@ViewBag.Plugins[i].iconSrc)" />
+                                                        <span>@ViewBag.Plugins[i].name</span>
+                                                    </div>
+                                                </button>
+                                            </form>
+                                        }
+                                        else
+                                        {
+                                            <div>
+                                                <input style="visibility:hidden; height: 0px; width: 0px;" type="text" value="@Photos[@ViewBag.PhotoId]" name="src" />
+                                                <input style="visibility:hidden; height: 0px; width: 0px;" type="number" value="@Photos.Count" name="id" />
+                                                <input style="visibility:hidden; height: 0px; width: 0px;" type="text" value="@ViewBag.Plugins[i].name" name="plugName" />
+                                                <button style="background: transparent;">
+                                                    <div class="edit_tool_card" style="background: #B75800;">
+                                                        <p class="PRO_tool">PRO</p>
+                                                        <img src="@Url.Content(@ViewBag.Plugins[i].iconSrc)" />
+                                                        <span>@ViewBag.Plugins[i].name</span>
+                                                    </div>
+                                                </button>
+                                            </div>
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="edit_tool ">
+                <div class="edit_tool_title">
+                    <div class="edit_tool_name">
+                        <img src="~/img/restoration_ic.svg" />
+                        <span>Реставрация</span>
+                    </div>
+                    <img class="tool_closed_icon" src="~/img/tool_closed.svg" />
+                </div>
+
+                <div class="edit_tool_content">
+                    <div class="edit_tool_content_cards">
+                        @{
+                            if (@ViewBag.PhotoId != 999)
+                            {
+                                for (int i = 0; i < @ViewBag.Plugins.Count; i++)
+                                {
+                                    if (@ViewBag.Plugins[i].name == "Метод Телеа" || @ViewBag.Plugins[i].name == "Метод Навье-Стокса" || @ViewBag.Plugins[i].name == "Метод Криминиси" || @ViewBag.Plugins[i].name == "Авто реставрация" || @ViewBag.Plugins[i].name == "Фильтр медианный")
+                                    {
+                                        <form method="post" action="PhotoEditor/EditPhoto">
+                                            <input style="visibility:hidden; height: 0px; width: 0px;" type="text" value="@Photos[@ViewBag.PhotoId]" name="src" />
+                                            <input style="visibility:hidden; height: 0px; width: 0px;" type="number" value="@Photos.Count" name="id" />
+                                            <input style="visibility:hidden; height: 0px; width: 0px;" type="text" value="@ViewBag.Plugins[i].name" name="plugName" />
+                                            <button style="background: transparent;" type="submit">
+                                                <div class="edit_tool_card">
+                                                    <img src="@Url.Content(@ViewBag.Plugins[i].iconSrc)" />
+                                                    <span>@ViewBag.Plugins[i].name</span>
+                                                </div>
+                                            </button>
+                                        </form>
+                                    }
+                                }
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @{
+        if (@ViewBag.PhotoId != 999)
+        {
+            <form style="height: 61px; width:105px; padding-bottom: 10px;" method="post" action="PhotoEditor/SaveChanges">
+                <input style="visibility:hidden; height: 0px; width: 0px;" type="text" value="@Photos[@ViewBag.PhotoId]" name="imgSrc" />
+                <input style="visibility:hidden; height: 0px; width: 0px;" type="number" value="@Photos.Count" name="count" />
+                <input style="visibility:hidden; height: 0px; width: 0px;" type="number" value="999" name="id" />
+                <button type="submit" class="confirm_change">Применить изменения</button>
+            </form>
+        }
+        else if (@ViewBag.PhotoId == 999 && @ViewBag.DownloadSrc1 != "" && @ViewBag.DownloadSrc2 != "" && @ViewBag.DownloadSrc3 != "")
+        {
+            <a href="@ViewBag.DownloadSrc1" download="IMAGIO-photo"><button class="confirm_change">Скачать фото .jpg</button></a>
+            if (User.IsInRole("UserPRO"))
+            {
+                <a href="@ViewBag.DownloadSrc2" download="IMAGIO-photo"><button style="bottom: -70px" class="confirm_change">Скачать фото .png</button></a>
+                <a href="@ViewBag.DownloadSrc3" download="IMAGIO-photo"><button style="bottom: -140px" class="confirm_change">Скачать фото .bmp</button></a>
+            }
+            else
+            {
+                <button style="bottom: -70px; color:#ffffff; background: #B75800;" class="confirm_change">PRO</button>
+                <button style="bottom: -140px; color:#ffffff; background: #B75800;" class="confirm_change">PRO</button>
+            }
+        }
+        else
+        {
+            <form method="post" asp-controller="SelectPhoto" asp-action="Index"><button class="confirm_change">Выбрать фото</button></form>
+        }
+    }
+</section>

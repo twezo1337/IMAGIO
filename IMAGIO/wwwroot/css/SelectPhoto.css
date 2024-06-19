@@ -1,0 +1,88 @@
+﻿.select_photo_page {
+    margin-top: 50px;
+    margin-bottom: 130px;
+    position: relative;
+    text-align: center;
+}
+
+.form-drag-drop {
+    width: 1000px;
+    padding-top: 35px;
+    padding-bottom: 15px;
+    background: #ffffff;
+    border: 1px solid #DC6A00;
+    border-radius: 25px;
+    margin: 0 auto;
+}
+@media (max-width: 1540px) {
+    .form-drag-drop {
+        width: 860px;
+    }
+}
+
+.form-group {
+    text-align: center;
+
+}
+
+    .form-group p {
+        text-align: center;
+        font-weight: 500;
+        font-size: 20px;
+        line-height: 29px;
+        text-align: center;
+        letter-spacing: 0.095em;
+        color: #DC6A00;
+    }
+
+#uploader {
+    border: none;
+    background: #FFFFFF;
+}
+.dropzone {
+    color: #DC6A00;
+    border-radius: 15px;
+}
+
+.drop_img {
+    margin-top: 20px;
+}
+
+.btn_select_photo {
+    margin-top: 10px;
+    width: 309px;
+    height: 62px;
+    background: #DC6A00;
+    border: 1px solid #DC6A00;
+    border-radius: 15px;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 26px;
+    letter-spacing: 0.095em;
+    color: #FFFFFF;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+    .btn_select_photo:hover {
+        background: #FFFFFF;
+        color: #DC6A00;
+    }
+
+[data-tooltip]::after {
+    content: attr(data-tooltip); /* Выводим текст */
+    opacity: 0;
+    transition: 1s;
+    pointer-events: none;
+    color: #BF0000;
+    font-size: 18px;
+    width: 200px;
+    position: absolute;
+    top: 50px;
+    left: 50%;
+    transform: translate(-50%, 0%)
+}
+
+[data-tooltip]:hover::after {
+    opacity: 1;
+}

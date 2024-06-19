@@ -1,0 +1,22 @@
+﻿@model IMAGIO.ViewModels.LoginViewModel
+
+@{
+    ViewData["Title"] = "Log in";
+}
+
+<div class="modalAuthActive">
+<form autocomplete="on" method="post" asp-controller="Account" asp-action="Login" class="auth_form">
+    <div class="form_group">
+        <span class="form_input_name">Имя пользователя</span>
+        <input asp-for="Name" class="form_input" placeholder="Login" type="text" />
+    </div>
+    <div class="form_group">
+        <span class="form_input_name">Пароль</span>
+        <input autocomplete="new-password" asp-for="Password" class="form_input" type="password" name="Password" />
+    </div>
+    <div class="form_group_button">
+        <button class="form_button">Войти</button>
+    </div>
+    <div asp-validation-summary="All" class="error_form_send"></div>
+</form>
+</div>

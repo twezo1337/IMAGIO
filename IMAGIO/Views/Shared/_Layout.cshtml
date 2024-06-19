@@ -1,0 +1,81 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - IMAGIO</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Modals.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/SelectPhoto.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/photoEditor.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/History.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
+</head>
+<body>
+    <header class="container header">
+        <a href="/Home"><h1 class="logo">IMAGIO</h1></a>
+
+        @if (!User.Identity.IsAuthenticated)
+        {
+            <button data-tooltip="Войдите или создайте аккаунт" class="select_photo_btn">Начать редактирование</button>
+        }
+        else
+        {
+            <a href="/SelectPhoto"><button class="select_photo_btn">Начать редактирование</button></a>
+        }
+
+        @if (User.Identity.IsAuthenticated)
+        {
+            <div class="authorized">
+                <div class="account">
+                    <a href="/History">
+                        <img src="~/img/codicon_account.svg" />
+                        <span class="user_name">@User.Identity.Name</span>
+                        @if (User.IsInRole("UserPRO"))
+                        {
+                            <span class="user_pro">PRO</span>
+                        }
+                    </a>
+                    <form method="post" asp-controller="Account" asp-action="Logout"><button type="submit" value="Выход" class="exit_btn">Выйти</button></form>
+                </div>
+                @if (!User.IsInRole("UserPRO"))
+                {
+                    <button class="buy_pro_btn">Купить IMAGIO Pro</button>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="not_authorized">
+                <a href="/Account/Login"><button class="auth_btn">Войти</button></a>
+                <a href="/Account/Register"><button class="reg_btn">Регистрация</button></a>
+            </div>
+        }
+    </header>
+
+    <div class="container">
+        <main role="main" class="">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="container footer">
+        <span class="privacy">&copy; 2023 - IMAGIO - Privacy</span>
+        <div class="social">
+            <a href="https://ru-ru.facebook.com/"><img src="~/img/fb.svg" /></a>
+            <a href="https://twitter.com/?lang=ru"><img src="~/img/twitter.svg" /></a>
+            <a href="https://www.instagram.com/"><img src="~/img/inst.svg" /></a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/Spoiler.js" asp-append-version="true"></script>
+    <script src="~/js/Modals.js" asp-append-version="true"></script>
+    <script src="~/js/Zoom.js" asp-append-version="true"></script>
+    <script src="~/js/Canvas.js" asp-append-version="true"></script>
+    <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

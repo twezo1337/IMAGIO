@@ -1,0 +1,73 @@
+﻿@{
+    ViewData["Title"] = "История редактирования";
+    string name = User.Identity.Name;
+}
+
+<section class="edit_history">
+    <h1>Ваша история редактирования <b>@name</b></h1>
+
+    @{
+        if (@ViewBag.PhotoHistory.Count == 0)
+        {
+            <div class="empty_history_container">
+                <div class="empty_history_content">
+                    Пусто
+                    <img src="~/img/empty_history.svg" />
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="edit_history_content">
+                @{
+                    for (int i = 0; i < @ViewBag.PhotoHistory.Count; i++)
+                    {
+                        <div class="edit_history_content_card">
+                            <form class="delete_history_card" method="post" action="History/DeleteCard">
+                                <input style="visibility:hidden; height: 0px; width: 0px;" type="text" value="@ViewBag.PhotoHistory[i].imgSrc" name="imgSrc" />
+                                <button type="submit">Удалить</button>
+                            </form>
+                            <div class="history_img">
+                                <img src="@ViewBag.PhotoHistory[i].imgSrc" />
+                            </div>
+                            <div class="history_date">
+                                <span><b>Дата: </b></span>
+                                <span>@ViewBag.PhotoHistory[i].date</span>
+                            </div>
+                            <div class="history_changes">
+                                <div>
+                                    <span><b>Изменения: </b></span>
+                                    <span>@ViewBag.PhotoHistory[i].changes</span>
+                                </div>
+                            </div>
+
+                            @{
+                                string downloadLinkPngTemp = @ViewBag.PhotoHistory[i].imgSrc;
+                                string downloadLinkBmpTemp = @ViewBag.PhotoHistory[i].imgSrc;
+                                string downloadLinkPng = downloadLinkPngTemp.Split("/")[0] + "/" + downloadLinkPngTemp.Split("/")[1] + "/" + downloadLinkPngTemp.Split("/")[2] + "/" + downloadLinkPngTemp.Split("/").Last().Split(".").First() + ".png";
+                                string downloadLinkBmp = downloadLinkPngTemp.Split("/")[0] + "/" + downloadLinkPngTemp.Split("/")[1] + "/" + downloadLinkPngTemp.Split("/")[2] + "/" + downloadLinkPngTemp.Split("/").Last().Split(".").First() + ".bmp"; ;
+                            }
+
+                            <div class="history_btns">
+                                <a href="@ViewBag.PhotoHistory[i].imgSrc" download="IMAGIO-photo"><button>Скачать .jpg</button></a>
+                                @{
+                                    if (User.IsInRole("UserPRO"))
+                                    {
+                                        <a href="@downloadLinkPng" download="IMAGIO-photo"><button>Скачать .png</button></a>
+                                        <a href="@downloadLinkBmp" download="IMAGIO-photo"><button>Скачать .bmp</button></a>
+                                    }
+                                    else
+                                    {
+                                        <button style="color:#ffffff; background: #B75800;">PRO</button>
+                                        <button style="color:#ffffff; background: #B75800;">PRO</button>
+                                    }
+                                }
+
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        }
+    }
+</section>

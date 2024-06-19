@@ -1,0 +1,15 @@
+﻿@{
+    ViewData["Title"] = "Upload Photo";
+}
+
+<div class="select_photo_page">
+    <form method="post" enctype="multipart/form-data"
+          data-pasley-validate class="form-drag-drop">
+        <div class="form-group">
+            <p>Выбери нужные фотографии<br> и можешь начинать редактирование</p>
+            <img class="drop_img" src="~/img/drag-drop.svg" />   
+            <div action="/SelectPhoto/Upload" class="dropzone" id="uploader"></div> 
+        </div>
+    </form>
+    <form method="post" asp-controller="PhotoEditor" asp-action="Index"><button class="btn_select_photo">Выбрать фото</button></form>
+</div>

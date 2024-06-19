@@ -1,0 +1,30 @@
+﻿@model IMAGIO.ViewModels.RegisterViewModel
+
+@{
+    ViewData["Title"] = "Registration";
+}
+
+<div class="modalRegActive">
+<form asp-controller="Account" asp-action="Register" class="reg_form" method="post">
+    <div class="form_group">
+        <span class="form_input_name">Имя пользователя</span>
+        <input asp-for="Name" class="form_input" placeholder="Login" type="text" />
+    </div>
+    @*<div class="form_group">
+        <span class="form_input_name">Электронная почта</span>
+        <input asp-for="Email" class="form_input" placeholder="test@gmail.com" type="email" name="E-mail" />
+    </div>*@
+    <div class="form_group">
+        <span class="form_input_name">Пароль</span>
+        <input autocomplete="new-password" asp-for="Password" class="form_input" type="password" />
+    </div>
+    <div class="form_group">
+        <span class="form_input_name">Повторите пароль</span>
+        <input autocomplete="new-password" asp-for="PasswordConfirm" class="form_input" type="password" />
+    </div>
+    <div class="form_group_button">
+        <button class="form_button" type="submit" name="form_auth_submit">Создать аккаунт</button>
+    </div>
+        <div asp-validation-summary="All" class="error_form_send"></div>
+</form>
+</div>

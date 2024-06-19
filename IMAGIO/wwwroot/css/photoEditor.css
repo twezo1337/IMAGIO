@@ -1,0 +1,316 @@
+﻿.photo_editor_frame {
+    padding-top: 15px;
+    padding-bottom: 15px;
+    height: 780px;
+    width: 100%;
+    display: flex;
+    position: relative;
+    margin-bottom: 175px;
+}
+
+.photos {
+    width: 223px;
+    height: 739px;
+}
+.photo_list {
+    padding-top: 29px;
+    padding-left: 9px;
+    padding-right: 9px;
+    width: 223px;
+    height: 567px;
+    overflow-y: auto;
+}
+.photo_list::-webkit-scrollbar {
+    width: 0;
+}
+    .photo_list img:not(:first-child) {
+        margin-top: 25px;
+    }
+.photo_list_pic {
+    border-radius: 10px;
+    cursor: pointer;
+    width: 100%;
+    object-fit: cover;
+    height: 125px;
+}
+
+.list_pic_active {
+    border: 2px solid #DC6A00;
+    height: auto;
+}
+
+.list_photo_click_form {
+    width: 100%;
+    height: auto;
+}
+.list_photo_input {
+    visibility: hidden;
+}
+.list_photo_btn {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+}
+
+.photo_list_error {
+    text-align: center;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 26px;
+    letter-spacing: 0.095em;
+    color: #DC6A00;
+}
+
+.delete_photos {
+    margin-top: 25px;
+    width: 223px;
+    height: 52px;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    background: transparent;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 23px;
+    letter-spacing: 0.095em;
+    color: #DC6A00;
+    transition: all 0.3s ease;
+}
+    .delete_photos:hover {
+        border: 1px solid #DC6A00;
+    }
+
+.edit_photo {
+    width: 908px;
+    height: 739px;
+    padding-bottom: 67px;
+    padding-left: 26px;
+    padding-right: 26px;
+    padding-top: 21px;
+}
+
+.edit_photo_btns {
+    height: 61px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+    .edit_photo_btns button {
+        width: 105px;
+        height: 61px;
+        background: #DC6A00;
+        border: 1px solid #DC6A00;
+        border-radius: 15px;
+    }
+
+.zoom_btns {
+    width: 225px;
+    height: 61px;
+    display: flex;
+    justify-content: space-between;
+}
+    .zoom_btns btn {
+        width: 105px;
+        height: 61px;
+        background: #DC6A00;
+        border: 1px solid #DC6A00;
+        border-radius: 15px;
+    }
+
+.edit_frame {
+    margin-top: 19px;
+    width: 856px;
+    height: 571px;
+    background: rgba(220, 106, 0, 0.1);
+    overflow-y: auto;
+    position: relative;
+}
+    .edit_frame::-webkit-scrollbar {
+        width: 0;
+    }
+
+
+.edit_frame img {
+    width: 856px;
+    height: auto;
+}
+canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.edit_tools {
+    width: 349px;
+    height: 739px;
+    padding-top: 26px;
+    padding-left: 19px;
+    padding-right: 19px;
+}
+.edit_tools_frame {
+    width: 100%;
+    height: 647px;
+    overflow-y: auto;
+}
+.edit_tools_frame::-webkit-scrollbar {
+    width: 0;
+}
+
+.edit_tool {
+    cursor: pointer;
+    margin-top: 15px;
+    width: 310px;
+    max-height: 1000px;
+    background: #DC6A00;
+    border-radius: 10px;
+    padding-top: 9px;
+    padding-left: 13px;
+    padding-right: 20px;
+    padding-bottom: 16px;
+}
+
+    .edit_tool span {
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 30px;
+        letter-spacing: 0.095em;
+        color: #FFFFFF;
+    }
+
+.edit_tool_title {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.edit_tool_content {
+    margin-top: 17px;
+    width: 100%;
+    height: auto;
+    display: none;
+}
+.edit_tool_content_cards {
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.edit_tool_card {
+    margin-top: 15px;
+    width: 125px;
+    height: 105px;
+    background: #FFFFFF;
+    text-align: center;
+    border-radius: 15px;
+    padding-top: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
+    position: relative;
+}
+    .edit_tool_card img {
+    }
+    .edit_tool_card span {
+        margin-top: 10px;
+        display: block;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 14px;
+        letter-spacing: 0.02em;
+        color: #DC6A00;
+    }
+
+    .tool_closed_icon {
+        margin-top: 3px;
+        width: 22px;
+        height: 22px;
+        transition: transform 0.3s ease;
+    }
+
+.edit_tool_title.active .tool_closed_icon {
+    transform: rotate(90deg);
+}
+
+.input_tool {
+    margin-top: 10px;
+    display: block;
+    width: 125px;
+    height: 30px;
+    border-radius: 10px;
+    padding-left: 10px;
+    margin-left: 12px;
+    font-weight: 400;
+    color: #DC6A00;
+}
+
+.confirm_change {
+    width: 276px;
+    height: 54px;
+    background: #DC6A00;
+    border: 1px solid #DC6A00;
+    border-radius: 15px;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 26px;
+    letter-spacing: 0.095em;
+    color: #FFFFFF;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%, 0%);
+    transition: all 0.3s ease;
+}
+
+    .confirm_change:hover {
+        background: #FFFFFF;
+        color: #DC6A00;
+    }
+
+
+.active {
+    display: flex;
+}
+
+
+
+.slider {
+    -webkit-appearance: none;
+    margin-top: 10px;
+    width: 125px;
+    height: 30px;
+    border-radius: 15px;
+    background: #ffffff;
+    outline: none;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+
+    .slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: #DC6A00;
+        cursor: pointer;
+    }
+
+    .slider::-moz-range-thumb {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: #DC6A00;
+        cursor: pointer;
+    }
+
+.PRO_tool {
+    position: absolute;
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 14px;
+    letter-spacing: 0.05em;
+    top: 38%;
+    left: 50%;
+    transform: translate(-50%, 0);
+    color: #FFFFFF;
+}
